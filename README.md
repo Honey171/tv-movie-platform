@@ -1,1 +1,1 @@
-![Home-page](https://prnt.sc/4_LQo33nxdYG)
+![Home-page](prnt.sc/4_LQo33nxdYG)
