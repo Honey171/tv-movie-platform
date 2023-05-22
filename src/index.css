@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Karla:wght@300;400;500;600;700;800&display=swap');
+
+* {
+  font-family: 'Karla', sans-serif;
+}
+
+body {
+  background-color: rgba(2, 6, 23);
+  scroll-behavior: smooth;
+}
+body::-webkit-scrollbar {
+  width: 10px;
+}
+body::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px white;
+  border-radius: 10px;
+}
+body::-webkit-scrollbar-thumb {
+  background-color: yellow;
+  border-radius: 10px;
+}
+.trendingList::-webkit-scrollbar {
+  width: 10px;
+}
+.trendingList::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 5px;
+}
+.trendingList::-webkit-scrollbar-thumb {
+  background: red;
+  border-radius: 5px;
+}
+.selected {
+  background-color: white;
+  color: black;
+}
+.castScroll::-webkit-scrollbar {
+  width: 1px;
+}
+.castScroll::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px white;
+  border-radius: 10px;
+}
+.castScroll::-webkit-scrollbar-thumb {
+  box-shadow: inset 0px 5px 6px white;
+  border-radius: 10px;
+}
+.biographyScroll::-webkit-scrollbar {
+  width: 8px;
+}
+.biographyScroll::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px white;
+  border-radius: 10px;
+}
+.biographyScroll::-webkit-scrollbar-thumb {
+  background: yellow;
+  border-radius: 10px;
+}
+.sliderContentScroll::-webkit-scrollbar {
+  width: 8px;
+}
+.sliderContentScroll::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px white;
+  border-radius: 10px;
+}
+.sliderContentScroll::-webkit-scrollbar-thumb {
+  box-shadow: inset 0px 5px 6px white;
+  border-radius: 10px;
+}
+.historyScroll::-webkit-scrollbar {
+  width: 7px;
+}
+.historyScroll::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 2px white;
+  border-radius: 10px;
+}
+.historyScroll::-webkit-scrollbar-thumb {
+  background-color: yellow;
+  border-radius: 10px;
+}
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  display: none;
+}
+.Toastify__progress-bar-theme--dark {
+  background-color: yellow !important;
+}
