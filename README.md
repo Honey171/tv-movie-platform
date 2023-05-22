@@ -27,6 +27,7 @@ Using TMDB api - https://developer.themoviedb.org/reference/intro/getting-starte
 - Categorized favorites page
 - Fixed navbar
 - Used semantic HTML
+- Eye friendly without dark reader
 
 ## Used packages
 
