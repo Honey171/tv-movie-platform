@@ -1,4 +1,10 @@
-import { createContext, useState, useEffect } from 'react';
+import {
+  createContext,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+} from 'react';
 import { toast } from 'react-toastify';
 
 export const ContextData = createContext();
@@ -207,7 +213,7 @@ export const ContextProvider = ({ children }) => {
     },
   ]);
 
-  const addedNotify = (name) =>
+  const addedNotify = useCallback((name) => {
     toast(`${name} added to favorites!`, {
       role: 'alert',
       position: 'top-right',
@@ -216,7 +222,9 @@ export const ContextProvider = ({ children }) => {
       closeOnClick: true,
       theme: 'dark',
     });
-  const removedNotify = (name) =>
+  }, []);
+
+  const removedNotify = useCallback((name) => {
     toast(`${name} removed from favorites!`, {
       role: 'alert',
       position: 'top-right',
@@ -225,7 +233,9 @@ export const ContextProvider = ({ children }) => {
       closeOnClick: true,
       theme: 'dark',
     });
-  const errorNotify = () =>
+  }, []);
+
+  const errorNotify = useCallback(() => {
     toast(`Something went wrong try to refresh page`, {
       role: 'alert',
       position: 'top-right',
@@ -235,6 +245,7 @@ export const ContextProvider = ({ children }) => {
       theme: 'dark',
       type: 'error',
     });
+  }, []);
 
   useEffect(() => {
     const recentSearches = JSON.parse(
@@ -263,73 +274,99 @@ export const ContextProvider = ({ children }) => {
     }
   }, []);
 
-  const addFavoriteMoviesHandler = (item) => {
-    if (!userFavoriteMovies.some((favorite) => favorite.id === item.id)) {
-      setUserFavoriteMovies((prevFavorites) => [...prevFavorites, item]);
-      localStorage.setItem(
-        'userFavoriteMovies',
-        JSON.stringify([...userFavoriteMovies, item]),
+  const addFavoriteMoviesHandler = useCallback(
+    (item) => {
+      if (!userFavoriteMovies.some((favorite) => favorite.id === item.id)) {
+        setUserFavoriteMovies((prevFavorites) => [...prevFavorites, item]);
+        localStorage.setItem(
+          'userFavoriteMovies',
+          JSON.stringify([...userFavoriteMovies, item]),
+        );
+        addedNotify(item.name);
+      }
+    },
+    [userFavoriteMovies, addedNotify],
+  );
+
+  const addFavoriteSeriesHandler = useCallback(
+    (item) => {
+      if (!userFavoriteSeries.some((favorite) => favorite.id === item.id)) {
+        setUserFavoriteSeries((prevFavorites) => [...prevFavorites, item]);
+        localStorage.setItem(
+          'userFavoriteSeries',
+          JSON.stringify([...userFavoriteSeries, item]),
+        );
+        addedNotify(item.name);
+      }
+    },
+    [userFavoriteSeries, addedNotify],
+  );
+
+  const addFavoritePeopleHandler = useCallback(
+    (item) => {
+      if (!userFavoritePeople.some((favorite) => favorite.id === item.id)) {
+        setUserFavoritePeople((prevFavorites) => [...prevFavorites, item]);
+        localStorage.setItem(
+          'userFavoritePeople',
+          JSON.stringify([...userFavoritePeople, item]),
+        );
+        addedNotify(item.name);
+      }
+    },
+    [userFavoritePeople, addedNotify],
+  );
+
+  const removeFavoriteMoviesHandler = useCallback(
+    (item) => {
+      const newFavorites = userFavoriteMovies.filter(
+        (favorite) => favorite.id !== item.id,
       );
-    }
-  };
+      setUserFavoriteMovies(newFavorites);
+      localStorage.setItem('userFavoriteMovies', JSON.stringify(newFavorites));
+      removedNotify(item.name);
+    },
+    [userFavoriteMovies, removedNotify],
+  );
 
-  const addFavoriteSeriesHandler = (item) => {
-    if (!userFavoriteSeries.some((favorite) => favorite.id === item.id)) {
-      setUserFavoriteSeries((prevFavorites) => [...prevFavorites, item]);
-      localStorage.setItem(
-        'userFavoriteSeries',
-        JSON.stringify([...userFavoriteSeries, item]),
+  const removeFavoriteSeriesHandler = useCallback(
+    (item) => {
+      const newFavorites = userFavoriteSeries.filter(
+        (favorite) => favorite.id !== item.id,
       );
-    }
-  };
+      setUserFavoriteSeries(newFavorites);
+      localStorage.setItem('userFavoriteSeries', JSON.stringify(newFavorites));
+      removedNotify(item.name);
+    },
+    [userFavoriteSeries, removedNotify],
+  );
 
-  const addFavoritePeopleHandler = (item) => {
-    if (!userFavoritePeople.some((favorite) => favorite.id === item.id)) {
-      setUserFavoritePeople((prevFavorites) => [...prevFavorites, item]);
-      localStorage.setItem(
-        'userFavoritePeople',
-        JSON.stringify([...userFavoritePeople, item]),
+  const removeFavoritePeopleHandler = useCallback(
+    (item) => {
+      const newFavorites = userFavoritePeople.filter(
+        (favorite) => favorite.id !== item.id,
       );
-    }
-  };
+      setUserFavoritePeople(newFavorites);
+      localStorage.setItem('userFavoritePeople', JSON.stringify(newFavorites));
+      removedNotify(item.name);
+    },
+    [userFavoritePeople, removedNotify],
+  );
 
-  const removeFavoriteMoviesHandler = (item) => {
-    const newFavorites = userFavoriteMovies.filter(
-      (favorite) => favorite.id !== item.id,
-    );
-    setUserFavoriteMovies(newFavorites);
-    localStorage.setItem('userFavoriteMovies', JSON.stringify(newFavorites));
-  };
-
-  const removeFavoriteSeriesHandler = (item) => {
-    const newFavorites = userFavoriteSeries.filter(
-      (favorite) => favorite.id !== item.id,
-    );
-    setUserFavoriteSeries(newFavorites);
-    localStorage.setItem('userFavoriteSeries', JSON.stringify(newFavorites));
-  };
-
-  const removeFavoritePeopleHandler = (item) => {
-    const newFavorites = userFavoritePeople.filter(
-      (favorite) => favorite.id !== item.id,
-    );
-    setUserFavoritePeople(newFavorites);
-    localStorage.setItem('userFavoritePeople', JSON.stringify(newFavorites));
-  };
-
-  function handleSearch() {
-    setRecentSearchValues([...recentSearchValues, currentValue]);
-
+  const handleSearch = useCallback(() => {
+    setRecentSearchValues((prevSearchValues) => [
+      ...prevSearchValues,
+      currentValue,
+    ]);
     localStorage.setItem(
       'recentSearchValues',
       JSON.stringify([...recentSearchValues, currentValue]),
     );
-  }
+  }, [currentValue, recentSearchValues]);
 
-  function handleClear() {
+  const handleClear = useCallback(() => {
     setRecentSearchValues([]);
     localStorage.removeItem('recentSearchValues');
-  }
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -371,101 +408,145 @@ export const ContextProvider = ({ children }) => {
     };
   }, []);
 
-  const multiSearchHandler = async (inputValue) => {
-    const controller = new AbortController();
-    const { signal } = controller;
+  const multiSearchHandler = useCallback(
+    async (inputValue) => {
+      const controller = new AbortController();
+      const { signal } = controller;
 
-    setLoading(true);
-    Promise.all([
-      fetch(
-        `https://api.themoviedb.org/3/search/movie?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&query=${inputValue}&page=1&include_adult=yes`,
-        { signal },
-      ),
-      fetch(
-        `https://api.themoviedb.org/3/search/tv?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&query=${inputValue}&page=1&include_adult=yes`,
-        { signal },
-      ),
-      fetch(
-        `https://api.themoviedb.org/3/search/person?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&query=${inputValue}&page=1&include_adult=yes`,
-        { signal },
-      ),
-    ])
-      .then(([response1, response2, response3]) =>
-        Promise.all([response1.json(), response2.json(), response3.json()]),
-      )
-      .then((data) => {
-        setSearchedMovieResults(data[0]);
-        setSearchedTvResults(data[1]);
-        setSearchedPersonResults(data[2]);
+      setLoading(true);
+
+      try {
+        const [response1, response2, response3] = await Promise.all([
+          fetch(
+            `https://api.themoviedb.org/3/search/movie?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&query=${inputValue}&page=1&include_adult=yes`,
+            { signal },
+          ),
+          fetch(
+            `https://api.themoviedb.org/3/search/tv?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&query=${inputValue}&page=1&include_adult=yes`,
+            { signal },
+          ),
+          fetch(
+            `https://api.themoviedb.org/3/search/person?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&query=${inputValue}&page=1&include_adult=yes`,
+            { signal },
+          ),
+        ]);
+
+        const [data1, data2, data3] = await Promise.all([
+          response1.json(),
+          response2.json(),
+          response3.json(),
+        ]);
+        setSearchedMovieResults(data1);
+        setSearchedTvResults(data2);
+        setSearchedPersonResults(data3);
         setLoading(false);
-      })
-      .catch((err) => {
+      } catch (err) {
         if (err.name === 'AbortError') {
           setLoading(false);
-          return;
         } else {
           setLoading(false);
           errorNotify();
         }
-      });
+      }
+    },
+    [errorNotify],
+  );
 
-    return () => {
-      controller.abort();
-    };
-  };
+  const memoizedValue = useMemo(
+    () => ({
+      searchedValue,
+      setSearchedValue,
+      movieGenres,
+      tvGenres,
+      pageData,
+      setPageData,
+      searchResult,
+      trending,
+      chosenGenre,
+      setChosenGenre,
+      genreResult,
+      setGenreResult,
+      loading,
+      setSearchResult,
+      currentValue,
+      setCurrentValue,
+      trendingDate,
+      setTrendingDate,
+      setLoading,
+      multiSearchHandler,
+      searchedMovieResults,
+      searchedTvResults,
+      searchedPersonResults,
+      setSearchedMovieResults,
+      setSearchedTvResults,
+      setSearchedPersonResults,
+      showBiographyButtonClicked,
+      setShowBiographyButtonClicked,
+      setTrending,
+      isTrailerButtonClicked,
+      setIsTrailerButtonClicked,
+      recentSearchValues,
+      handleSearch,
+      handleClear,
+      addFavoriteMoviesHandler,
+      addFavoriteSeriesHandler,
+      addFavoritePeopleHandler,
+      removeFavoriteMoviesHandler,
+      removeFavoriteSeriesHandler,
+      removeFavoritePeopleHandler,
+      userFavoriteMovies,
+      userFavoriteSeries,
+      userFavoritePeople,
+    }),
+    [
+      searchedValue,
+      setSearchedValue,
+      movieGenres,
+      tvGenres,
+      pageData,
+      setPageData,
+      searchResult,
+      trending,
+      chosenGenre,
+      setChosenGenre,
+      genreResult,
+      setGenreResult,
+      loading,
+      setSearchResult,
+      currentValue,
+      setCurrentValue,
+      trendingDate,
+      setTrendingDate,
+      setLoading,
+      multiSearchHandler,
+      searchedMovieResults,
+      searchedTvResults,
+      searchedPersonResults,
+      setSearchedMovieResults,
+      setSearchedTvResults,
+      setSearchedPersonResults,
+      showBiographyButtonClicked,
+      setShowBiographyButtonClicked,
+      setTrending,
+      isTrailerButtonClicked,
+      setIsTrailerButtonClicked,
+      recentSearchValues,
+      handleSearch,
+      handleClear,
+      addFavoriteMoviesHandler,
+      addFavoriteSeriesHandler,
+      addFavoritePeopleHandler,
+      removeFavoriteMoviesHandler,
+      removeFavoriteSeriesHandler,
+      removeFavoritePeopleHandler,
+      userFavoriteMovies,
+      userFavoriteSeries,
+      userFavoritePeople,
+    ],
+  );
 
   return (
-    <ContextData.Provider
-      value={{
-        searchedValue,
-        setSearchedValue,
-        movieGenres,
-        tvGenres,
-        pageData,
-        setPageData,
-        searchResult,
-        trending,
-        chosenGenre,
-        setChosenGenre,
-        genreResult,
-        setGenreResult,
-        loading,
-        setSearchResult,
-        currentValue,
-        setCurrentValue,
-        trendingDate,
-        setTrendingDate,
-        setLoading,
-        multiSearchHandler,
-        searchedMovieResults,
-        searchedTvResults,
-        searchedPersonResults,
-        setSearchedMovieResults,
-        setSearchedTvResults,
-        setSearchedPersonResults,
-        showBiographyButtonClicked,
-        setShowBiographyButtonClicked,
-        setTrending,
-        isTrailerButtonClicked,
-        setIsTrailerButtonClicked,
-        addedNotify,
-        removedNotify,
-        recentSearchValues,
-        setRecentSearchValues,
-        handleSearch,
-        handleClear,
-        errorNotify,
-        addFavoriteMoviesHandler,
-        addFavoriteSeriesHandler,
-        addFavoritePeopleHandler,
-        removeFavoriteMoviesHandler,
-        removeFavoriteSeriesHandler,
-        removeFavoritePeopleHandler,
-        userFavoriteMovies,
-        userFavoriteSeries,
-        userFavoritePeople,
-      }}
-    >
+    <ContextData.Provider value={memoizedValue}>
       {children}
     </ContextData.Provider>
   );
